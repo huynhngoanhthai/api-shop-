@@ -1,0 +1,10 @@
+/node_modules
+/build
+/.env
+/.prettierrc
+.dockerignore
+ecosystem.config.js
+log
+yarn-error.log
+.docker
+.env.gitlab-ci

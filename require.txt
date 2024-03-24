@@ -1,0 +1,9 @@
+tao api ket noi tat ca sp trong mysql 
+
+thiết kế DB với điều kiện login là trong mysql.user chỉ khác là có 3 quyền chình 
+    USER table (cơ bản)
+    STAFF  table (trư thong kê)
+    MANAGER table.*
+
+sp_get_all_users : láy tất cả user trong data 
+sp_create_user: tao một user vời quyền là 
