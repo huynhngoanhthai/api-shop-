@@ -7,6 +7,7 @@ const mysql = require("./config/mysql");
 const { POST } = require("./config/constant");
 const catchError = require("./middlewares/catchError");
 const authRouter = require("./routers/authRouter");
+const productRouter = require("./routers/productRouter");
 
 mysql.getConnection((err) => {
     if (err) {
@@ -19,11 +20,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 // routers 
-app.get('/', (req, res) => {
-    res.send('Xin chào, đây là trang chủ của ứng dụng của bạn!');
-  });
-app.use("/api/v1/auth", authRouter);
 
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/product", productRouter);
 // middlewares 
 app.use(catchError);
 // start server

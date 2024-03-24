@@ -2,6 +2,10 @@ const catchAsync = require("../middlewares/catchAsync");
 const mysql = require("../config/mysql");
 const ApiError = require("../utils/ApiError");
 const { sign } = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/constant");
+const redis = require("redis");
+const redisClient = redis.createClient();
+const DEFAULT_EXPIRATION = 60;
 
 exports.getAllUser = catchAsync(async (req, res, next) => {
     mysql.query("SELECT * FROM users;", (error, result) => {
@@ -21,25 +25,33 @@ exports.postCreateUser = catchAsync(async (req, res, next) => {
 })
 exports.LoginUser = catchAsync(async (req, res, next) => {
     const { username, password } = req.body;
-
-    mysql.query("call shopAPI.sp_login_user(?, ?);", [username, password], (error, result) => {
+    await redisClient.get(`blacklist-user?${username}`, async (error, result) => {
         if (error) return next(new ApiError(400, error.message));
+        else if (result) return next(new ApiError(400, "user blocked"));
+    });
+    mysql.query("call shopAPI.sp_login_user(?,?);", [username, password], (error, result) => {
+        if (error) {
+            // console.log(error.message.split(':')[1].trim());
+            if (error.message.split(':')[1].trim() >= 5) {
+                // console.log("run--");
+                redisClient.setex(`blacklist-user?${username}`, DEFAULT_EXPIRATION, JSON.stringify(username, password))
+            }
+            return next(new ApiError(400, "username or password wrong"));
+        }
         console.log(result);
-        // const token = sign(
-        //     {
-        //         email: existedUser.email,
-        //         password: existedUser.password, //password hashed
-        //         name: existedUser.name,
-        //         role: existedUser.role,
-        //     },
-        //     JWT_SECRET,
-        //     { expiresIn: "1h" }
-        // );
-        // res.json({
-        //     success: true,
-        //     token: token,
-        //     user: req.user,
-        // });
-        res.json({ success: true, data: result[0] });
+        user = {
+            username: result[0][0]?.username,
+            role: result[0][0]?.role
+        }
+        const token = sign(
+            user,
+            JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+        res.json({
+            success: true,
+            token: token,
+            user
+        });
     });
 })
