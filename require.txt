@@ -4,6 +4,23 @@ thiết kế DB với điều kiện login là trong mysql.user chỉ khác là 
     USER table (cơ bản)
     STAFF  table (trư thong kê)
     MANAGER table.*
-
+database
 sp_get_all_users : láy tất cả user trong data 
 sp_create_user: tao một user vời quyền là 
+sp_login: dang nhap 
+api 
+POST http://localhost:3000/api/v1/auth/login
+nhập vào req.body username, password 
+nêm đúng thì trả về  username, role status 200
+sai trả về lỗi status ?
+
+POST http://localhost:3000/api/v1/auth/register
+nhập username, password, email, age, address, phone, role 
+tra ve lỗi nêu sai 
+username, email, phone  là đôc nhất 
+role có thể có hoặc không 
+role ENUM('USER', 'STAFF', 'MANAGER')
+trả đúng 
+
+http://localhost:3000/api/v1/auth
+lấy tất cả giá trị cảu user 

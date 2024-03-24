@@ -9,3 +9,4 @@ exports.DATABASE = process.env.DATABASE;
 // Export constants name table
 exports.TABLE_USER = process.env.TABLE_USER;
 exports.SALT = process.env.SALT;
+exports.JWT_SECRET = process.env.JWT_SECRET;
