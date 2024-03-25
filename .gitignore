@@ -8,3 +8,5 @@ log
 yarn-error.log
 .docker
 .env.gitlab-ci
+/public/avatar/*.jpg
+/public/photo-product/*.jpg

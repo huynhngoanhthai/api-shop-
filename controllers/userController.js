@@ -37,8 +37,9 @@ exports.LoginUser = catchAsync(async (req, res, next) => {
                 }
                 return next(new ApiError(400, "username or password wrong"));
             }
-
+            // console.log(result[0][0]);
             const user = {
+                user_id: result[0][0]?.id,
                 username: result[0][0]?.username,
                 role: result[0][0]?.role
             };
@@ -54,4 +55,13 @@ exports.LoginUser = catchAsync(async (req, res, next) => {
             });
         });
     });
+});
+
+exports.uploadAvatar = catchAsync(async (req, res, next) => {
+    const avatar = req?.file?.filename; 
+    const user_id = req?.user?.user_id;
+    mysql.query("call shopAPI.sp_upload_avatar(?, ?); ", [user_id,avatar] , async(error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] });
+    })
 });
