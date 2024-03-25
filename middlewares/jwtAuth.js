@@ -16,7 +16,6 @@ exports.jwtAuth = (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    // console.log(JSON.stringify(err, null, 2));
     throw new ApiError(401, "invalid signature");
   }
 };

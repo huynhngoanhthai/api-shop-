@@ -22,5 +22,9 @@ role có thể có hoặc không
 role ENUM('USER', 'STAFF', 'MANAGER')
 trả đúng 
 
+thiết kế api get tất cả sản phẩm trong data
+
+thiết kế  table product 
+
 http://localhost:3000/api/v1/auth
 lấy tất cả giá trị cảu user 
