@@ -11,7 +11,7 @@ exports.getAllUser = catchAsync(async (req, res, next) => {
     mysql.query("SELECT * FROM users;", (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         console.log(result);
-        res.json({ success: true, data: result });
+        return res.json({ success: true, data: result });
     });
 });
 exports.postCreateUser = catchAsync(async (req, res, next) => {
@@ -20,38 +20,38 @@ exports.postCreateUser = catchAsync(async (req, res, next) => {
     mysql.query("call sp_create_user(?, ?, ?, ?, ?, ?, ?);", [username, password, email, age, address, phone, role], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         console.log(result);
-        res.json({ success: true, data: result[0] });
+        return res.json({ success: true, data: result[0] });
     });
 })
 exports.LoginUser = catchAsync(async (req, res, next) => {
     const { username, password } = req.body;
-    await redisClient.get(`blacklist-user?${username}`, async (error, result) => {
+
+    redisClient.get(`blacklist-user?${username}`, async (error, result) => {
         if (error) return next(new ApiError(400, error.message));
-        else if (result) return next(new ApiError(400, "user blocked"));
-    });
-    mysql.query("call shopAPI.sp_login_user(?,?);", [username, password], (error, result) => {
-        if (error) {
-            // console.log(error.message.split(':')[1].trim());
-            if (error.message.split(':')[1].trim() >= 5) {
-                // console.log("run--");
-                redisClient.setex(`blacklist-user?${username}`, DEFAULT_EXPIRATION, JSON.stringify(username, password))
+        if (result) return next(new ApiError(400, "user blocked"));
+
+        mysql.query("CALL shopAPI.sp_login_user(?, ?);", [username, password], (error, result) => {
+            if (error) {
+                if (error.message.split(':')[1].trim() >= 5) {
+                    redisClient.setex(`blacklist-user?${username}`, DEFAULT_EXPIRATION, JSON.stringify(username, password));
+                }
+                return next(new ApiError(400, "username or password wrong"));
             }
-            return next(new ApiError(400, "username or password wrong"));
-        }
-        console.log(result);
-        user = {
-            username: result[0][0]?.username,
-            role: result[0][0]?.role
-        }
-        const token = sign(
-            user,
-            JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-        res.json({
-            success: true,
-            token: token,
-            user
+
+            const user = {
+                username: result[0][0]?.username,
+                role: result[0][0]?.role
+            };
+            const token = sign(
+                user,
+                JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+            return res.json({
+                success: true,
+                token: token,
+                user: user
+            });
         });
     });
-})
+});

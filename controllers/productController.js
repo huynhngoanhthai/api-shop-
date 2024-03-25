@@ -8,7 +8,7 @@ exports.getProducts = catchAsync(async (req, res, next) => {
     console.log(search);
     mysql.query("call shopAPI.sp_get_products(?);", [search], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
-        res.json({ success: true, data: result[0] });
+        return res.json({ success: true, data: result[0] });
     });
 });
 
@@ -19,7 +19,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     if (user.role != ROLE_MANAGER)  throw new ApiError(401, "invalid signature");     
     mysql.query("call sp_create_product(?,?,?,?)", [name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
-        res.json({ success: true, data: result[0] })
+        return res.json({ success: true, data: result[0] })
     });
 });
 
@@ -29,7 +29,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     if (user.role != ROLE_MANAGER)  throw new ApiError(401, "invalid signature");     
     mysql.query("call sp_update_product(?,?,?,?)", [id, name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
-        res.json({ success: true, data: result[0] })
+        return res.json({ success: true, data: result[0] })
     });
 
 });
