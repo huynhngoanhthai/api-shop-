@@ -16,7 +16,7 @@ exports.getProducts = catchAsync(async (req, res, next) => {
 exports.createProduct = catchAsync(async (req, res, next) => {
     const { name, description, price, quantity } = req.body;
     const user = req.user;
-    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
+    if (user.role != ROLE_MANAGER) throw new ApiError(403, "Unauthorized Access");
     mysql.query("call sp_create_product(?,?,?,?)", [name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] })
@@ -27,7 +27,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { name, description, price, quantity } = req.body;
     const user = req.user;
-    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
+    if (user.role != ROLE_MANAGER) throw new ApiError(403, "Unauthorized Access");
     mysql.query("call sp_update_product(?,?,?,?)", [id, name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] })
@@ -42,12 +42,18 @@ exports.getProductDetail = catchAsync(async (req, res, next) => {
         return res.json({ success: true, data: result[0] })
     });
 });
+/**
+ * @param user
+ * @param id
+ * @returns data[]
+ */
 exports.deleteProduct = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const user = req.user;
-    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
+    if (user.role != ROLE_MANAGER) throw new ApiError(403, "Unauthorized Access");
     mysql.query("call sp_delete_product(?)", [id], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] })
     });
 });
+
