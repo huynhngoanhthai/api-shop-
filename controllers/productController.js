@@ -13,10 +13,10 @@ exports.getProducts = catchAsync(async (req, res, next) => {
 });
 
 // need middleware auth 
-exports.createProduct = catchAsync(async (req, res, next) => { 
+exports.createProduct = catchAsync(async (req, res, next) => {
     const { name, description, price, quantity } = req.body;
     const user = req.user;
-    if (user.role != ROLE_MANAGER)  throw new ApiError(401, "invalid signature");     
+    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
     mysql.query("call sp_create_product(?,?,?,?)", [name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] })
@@ -24,12 +24,30 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProduct = catchAsync(async (req, res, next) => {
-    const { id, name, description, price, quantity } = req.body;
+    const { id } = req.params;
+    const { name, description, price, quantity } = req.body;
     const user = req.user;
-    if (user.role != ROLE_MANAGER)  throw new ApiError(401, "invalid signature");     
+    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
     mysql.query("call sp_update_product(?,?,?,?)", [id, name, description, price, quantity], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] })
     });
+});
 
+exports.getProductDetail = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    console.log(id);
+    mysql.query("call sp_get_product_detail(?)", [id], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] })
+    });
+});
+exports.deleteProduct = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const user = req.user;
+    if (user.role != ROLE_MANAGER) throw new ApiError(401, "invalid signature");
+    mysql.query("call sp_delete_product(?)", [id], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] })
+    });
 });
