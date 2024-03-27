@@ -74,7 +74,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     const id = req.params?.id;
     const user = req?.user;
     // if manager or your user delete your user  
-    if (user.role !== ROLE_MANAGER || id === user.user_id ) throw new ApiError(403, "Unauthorized Access");
+    if (user.role !== ROLE_MANAGER || id === user.user_id) throw new ApiError(403, "Unauthorized Access");
     mysql.query("call sp_delete_user(?);", [id], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         console.log(result);
@@ -83,14 +83,23 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 });
 exports.updateUser = catchAsync(async (req, res, next) => {
     const { id, email, age, address, phone } = req.body;
-    const user = req?.user; 
+    const user = req?.user;
     // console.log(id, email, age, address, phone);
     console.log(user);
     console.log(user.user_id, id);
-    if ( !(user.role == ROLE_MANAGER || id == user.user_id) ) throw new ApiError(403, "Unauthorized Access");
+    // manager-    is user
+    // 1      _      1 -> true
+    // 1      _      0 -> true
+    // 0      _      1 -> true
+    // 0      _      0 -> false 
+    if (!(user.role == ROLE_MANAGER || id == user.user_id)) throw new ApiError(403, "Unauthorized Access");
     mysql.query("call sp_update_user(?,?,?,?,?);", [id, email, age, address, phone], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         console.log(result[0]);
         return res.json({ success: true, data: result[0] });
     });
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => { });
+exports.forgotPassword = catchAsync(async (req, res, next) => { });
+exports.activeEmail = catchAsync(async (req, res, next) => { });

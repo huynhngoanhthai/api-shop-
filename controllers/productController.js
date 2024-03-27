@@ -57,3 +57,10 @@ exports.deleteProduct = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.updateImageProduct = catchAsync(async (req,res, next) => {
+
+});
+
+exports.historyStatisticsProduct = catchAsync(async(req,res,next) => {
+
+});
