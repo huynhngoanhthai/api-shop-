@@ -13,6 +13,7 @@ exports.getProducts = catchAsync(async (req, res, next) => {
 });
 
 // need middleware auth 
+// add recept
 exports.createProduct = catchAsync(async (req, res, next) => {
     const { name, description, price, quantity } = req.body;
     const user = req.user;
@@ -60,6 +61,7 @@ exports.updateImageProduct = catchAsync(async (req,res, next) => {
 exports.historyStatisticsProduct = catchAsync(async(req,res,next) => {
 
 });
+// manager categories
 exports.getCategories = catchAsync(async(req,res,next) => {
 
 });
