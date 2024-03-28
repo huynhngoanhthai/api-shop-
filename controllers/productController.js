@@ -42,11 +42,7 @@ exports.getProductDetail = catchAsync(async (req, res, next) => {
         return res.json({ success: true, data: result[0] })
     });
 });
-/**
- * @param user
- * @param id
- * @returns data[]
- */
+
 exports.deleteProduct = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const user = req.user;
@@ -62,5 +58,17 @@ exports.updateImageProduct = catchAsync(async (req,res, next) => {
 });
 
 exports.historyStatisticsProduct = catchAsync(async(req,res,next) => {
+
+});
+exports.getCategories = catchAsync(async(req,res,next) => {
+
+});
+exports.getCategoryDetail = catchAsync(async(req,res,next) => {
+
+});
+exports.updateCategory = catchAsync(async(req,res,next) => {
+
+});
+exports.deleteCategory = catchAsync(async(req,res,next) => {
 
 });

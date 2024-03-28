@@ -103,3 +103,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => { });
 exports.forgotPassword = catchAsync(async (req, res, next) => { });
 exports.activeEmail = catchAsync(async (req, res, next) => { });
+exports.getBills = catchAsync(async (req, res, next) => { });
+exports.getBillDetail = catchAsync(async (req, res, next) => { });
+exports.getBill = catchAsync(async (req, res, next) => { });
+
