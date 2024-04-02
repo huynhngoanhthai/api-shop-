@@ -3,7 +3,9 @@ const areaController = require("../controllers/areaController");
 const { jwtAuth } = require("../middlewares/jwtAuth");
 const areaRouter = Router();
 
-areaRouter.route("/").get(jwtAuth, areaController.getAreas);
+areaRouter.route("/")
+    .get(jwtAuth, areaController.getAreas)
+    .post(jwtAuth,areaController.createArea);
 
 
 
