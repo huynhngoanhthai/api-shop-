@@ -10,3 +10,4 @@ yarn-error.log
 .env.gitlab-ci
 /public/avatar/*.jpg
 /public/photo-product/*.jpg
+*.pdf

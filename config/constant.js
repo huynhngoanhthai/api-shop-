@@ -13,3 +13,5 @@ exports.JWT_SECRET = process.env.JWT_SECRET;
 exports.ROLE_USER = process.env.ROLE_USER;
 exports.ROLE_STAFF = process.env.ROLE_STAFF;
 exports.ROLE_MANAGER =  process.env.ROLE_MANAGER;
+// QUERY MYSQL 
+exports.QUERY_GET_AREAS = "SELECT * FROM areas"

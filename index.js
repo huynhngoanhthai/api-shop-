@@ -9,6 +9,7 @@ const catchError = require("./middlewares/catchError");
 const authRouter = require("./routers/authRouter");
 const productRouter = require("./routers/productRouter");
 const orderRouter = require("./routers/orderRouter");
+const areaRouter = require("./routers/areaRouter");
 
 mysql.getConnection((err) => {
     if (err) {
@@ -26,6 +27,7 @@ app.use(express.static('public'));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/area", areaRouter);
 // app.use("/api/v1/bill", orderRouter);
 app.use("/api/v1/statistics", orderRouter);
 
