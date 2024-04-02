@@ -20,21 +20,41 @@ exports.createArea = catchAsync(async (req, res, next) => {
     });
 });
 exports.deleteArea = catchAsync(async (req, res, next) => {
-    const id  = req.params.id; 
+    const id = Number(req.params.id);
     // update sp 
-    mysql.query("INSERT INTO shopAPI.areas (name) VALUES (?);", [id], (error, result) => {
+    mysql.query("DELETE FROM shopAPI.areas WHERE id = ?;", [id], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] });
     });
 });
 exports.updateArea = catchAsync(async (req, res, next) => {
+    const id = Number(req.params.id);
+    const { name } = req.body;
+    mysql.query("UPDATE `shopAPI`.`areas` SET name = ? WHERE id = ?;", [name, id], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] });
+    });
 
 });
+
 // manager tables
 exports.getTables = catchAsync(async (req, res, next) => {
+    const { id } = Number(req.params.id);
+    // update sp
+    mysql.query("SELECT * FORM tables WHERE id_area = ?", [id], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] });
+    });
 
 });
 exports.createTable = catchAsync(async (req, res, next) => {
+    const { id_area } = Number(req.params.id);
+    const { name, seat, status } = req.body;
+    // update sp
+    mysql.query("INSERT INTO shopAPI.tables (name,seat,status,id_area) VALUES (?,?,?,?);", [name, seat, status, id_area], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] });
+    });
 
 });
 exports.deleteTable = catchAsync(async (req, res, next) => {
