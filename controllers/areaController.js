@@ -8,18 +8,24 @@ exports.getAreas = catchAsync(async (req, res, next) => {
         if (error) return next(new ApiError(400, error.message));
         // console.log(result);
         return res.json({ success: true, data: result[0] });
-    })
+    });
 });
 exports.createArea = catchAsync(async (req, res, next) => {
-    console.log(req.user);
+    // console.log(req.user);
     const { name } = req.body;
+    // update sp 
     mysql.query("INSERT INTO `shopAPI`.`areas` (`name`) VALUES (?);", [name], (error, result) => {
         if (error) return next(new ApiError(400, error.message));
         return res.json({ success: true, data: result[0] });
-    })
+    });
 });
 exports.deleteArea = catchAsync(async (req, res, next) => {
-    
+    const id  = req.params.id; 
+    // update sp 
+    mysql.query("INSERT INTO shopAPI.areas (name) VALUES (?);", [id], (error, result) => {
+        if (error) return next(new ApiError(400, error.message));
+        return res.json({ success: true, data: result[0] });
+    });
 });
 exports.updateArea = catchAsync(async (req, res, next) => {
 
